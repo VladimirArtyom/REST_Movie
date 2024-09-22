@@ -6,17 +6,17 @@ import (
 
 func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Request) {
 	
-
-	var jsonMap map[string]string = map[string]string{
-		"status": "available",
-		"env": app.config.env,
-		"version": version,
+	var jsonEnvelope envelope = envelope{
+		"status" : "available",
+		"system_info": map[string]string {
+			"env": app.config.env,
+			"version": version,
+		},
 	}
 
-	jsonObject, err := app.writeJSON(w, jsonMap, http.StatusOK, nil)
+	jsonObject, err := app.writeJSON(w, jsonEnvelope, http.StatusOK, nil)
 	if err != nil {
-		app.logger.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		app.serverErrorResponse(w, r, err)
 		return
 	}
 	

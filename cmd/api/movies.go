@@ -12,15 +12,13 @@ import (
 func (app *application) createMovieHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintln(w, "creating a movie")
-
 }
-
 
 func (app *application) showMovieHandler(w http.ResponseWriter, r* http.Request) {
 	
 	id, err := app.readIDParam(r)
 	if err != nil {
-		http.NotFound(w, r)
+		app.notFoundResponse(w, r)
 		return
 	}
 
@@ -35,12 +33,15 @@ func (app *application) showMovieHandler(w http.ResponseWriter, r* http.Request)
 		Version: 10,
 	}
 
+	var movieEnvelope envelope = envelope{
+		"movie": movie,
+	}
+
 	
-	jsonObject, err := app.writeJSON(w, movie, http.StatusOK, nil)
+	jsonObject, err := app.writeJSON(w, movieEnvelope, http.StatusOK, nil)
 
 	if err != nil {
-		app.logger.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		app.serverErrorResponse(w, r, err)
 		return
 	}
 
