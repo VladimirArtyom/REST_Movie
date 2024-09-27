@@ -31,7 +31,6 @@ func (app *application) errorResponse(w http.ResponseWriter, r *http.Request,
 	}
 
 	w.Write(jsonObject)
-
 }
 
 func (app *application) methodNotAllowedResponse(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +38,6 @@ func (app *application) methodNotAllowedResponse(w http.ResponseWriter, r *http.
 	var message string =  fmt.Sprintf("the %s method is not supported for this reouserce", r.Method)
 
 	app.errorResponse(w, r, http.StatusMethodNotAllowed, message)
-
 }
 
 func (app *application) notFoundResponse(w http.ResponseWriter, r* http.Request) {
@@ -56,3 +54,9 @@ func (app *application) serverErrorResponse(w http.ResponseWriter, r *http.Reque
 	app.errorResponse(w, r, http.StatusInternalServerError, message)
 
 }
+
+func (app *application) badRequestResponse(w http.ResponseWriter, r* http.Request, err error) {
+
+	app.errorResponse(w, r, http.StatusBadRequest, err.Error())
+}
+

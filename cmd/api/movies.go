@@ -11,7 +11,21 @@ import (
 
 func (app *application) createMovieHandler(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Fprintln(w, "creating a movie")
+	var tempOutput struct {
+		Title string `json:"title"`
+		Year int `json:"year"`
+		Runtime data.Runtime `json:"runtime"`
+		Genres []string `json:"genres"`
+	}
+
+	err := app.readJSON(w, r, &tempOutput)
+
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	fmt.Fprintf(w, "%+v\n", tempOutput)
 }
 
 func (app *application) showMovieHandler(w http.ResponseWriter, r* http.Request) {
@@ -46,6 +60,5 @@ func (app *application) showMovieHandler(w http.ResponseWriter, r* http.Request)
 	}
 
 	w.Write(jsonObject)
-
 }
 
