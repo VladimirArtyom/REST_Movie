@@ -16,7 +16,6 @@ type Runtime int32
 func (r Runtime) MarshalJSON() ([]byte, error) {
 
 	var jsonValue string = strconv.Quote(fmt.Sprintf("%d mins", r))
-	fmt.Println(jsonValue)
 	
 	return []byte(jsonValue), nil
 
@@ -37,7 +36,7 @@ func (r *Runtime) UnmarshalJSON(data []byte) (error) {
 
 	minutes, err := strconv.ParseInt(parts[0], 10 ,32)
 	
-	if err != nil || minutes < 0 {
+	if err != nil  {
 		return ErrInvalidRuntimeFormat
 	}
 

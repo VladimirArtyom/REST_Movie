@@ -11,7 +11,6 @@ import (
 // Cree NotFound
 // Cree ServerError
 
-
 func (app *application) logError(r *http.Request, err error) {
 
 	app.logger.Println(err)
@@ -19,7 +18,7 @@ func (app *application) logError(r *http.Request, err error) {
 }
 
 func (app *application) errorResponse(w http.ResponseWriter, r *http.Request,
-																			status int, message interface{} ) {
+	status int, message interface{}) {
 
 	env := envelope{"error": message}
 
@@ -35,12 +34,12 @@ func (app *application) errorResponse(w http.ResponseWriter, r *http.Request,
 
 func (app *application) methodNotAllowedResponse(w http.ResponseWriter, r *http.Request) {
 
-	var message string =  fmt.Sprintf("the %s method is not supported for this reouserce", r.Method)
+	var message string = fmt.Sprintf("the %s method is not supported for this reouserce", r.Method)
 
 	app.errorResponse(w, r, http.StatusMethodNotAllowed, message)
 }
 
-func (app *application) notFoundResponse(w http.ResponseWriter, r* http.Request) {
+func (app *application) notFoundResponse(w http.ResponseWriter, r *http.Request) {
 
 	var message string = fmt.Sprintf("the requested resource %s was not found", r.URL)
 	app.errorResponse(w, r, http.StatusNotFound, message)
@@ -55,8 +54,12 @@ func (app *application) serverErrorResponse(w http.ResponseWriter, r *http.Reque
 
 }
 
-func (app *application) badRequestResponse(w http.ResponseWriter, r* http.Request, err error) {
+func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
 
 	app.errorResponse(w, r, http.StatusBadRequest, err.Error())
 }
 
+func (app *application) failedValidationResponse(w http.ResponseWriter, r *http.Request, errs map[string]string) {
+
+	app.errorResponse(w, r, http.StatusUnprocessableEntity, errs)
+}
